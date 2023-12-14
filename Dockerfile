@@ -1,5 +1,7 @@
 FROM python:slim
 
+ENV SENTRY_PYTHON_DSN=""
+
 WORKDIR /
 
 COPY requirements.txt ./

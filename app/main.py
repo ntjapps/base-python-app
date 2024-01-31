@@ -21,6 +21,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+@app.get("/app/healthcheck")
+def read_root():
+    return {"status": "ok"}
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}

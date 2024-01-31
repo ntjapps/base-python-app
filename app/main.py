@@ -21,19 +21,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/app/healthcheck")
-def read_root():
-    return {"status": "ok"}
-
-
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/home")
 def home(request: Request):
     return templates.TemplateResponse("home.html", context={"request": request})
+
+
+@app.get("/app/healthcheck")
+def read_root():
+    return JSONResponse({"status": "ok"})
 
 
 @app.post("/tasks", status_code=201)

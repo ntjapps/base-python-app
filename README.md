@@ -1,10 +1,10 @@
 ## How to generate requirements.txt
 
-use ``` pipreqs . --force ```
+use ``` pip freeze > requirements.txt ```
 
 ## How to upgrade packages
 
-use ``` python -m pip_review ```
+use ``` python -m pip_review --auto ```
 
 ## Install PIP Requirements
 

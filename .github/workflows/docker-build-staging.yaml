@@ -7,42 +7,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-app: # Steps to build staging application
+  build-app:
     runs-on: ubuntu-latest
     env:
-      REGISTRY: ghcr.io # GitHub Container Registry
-      IMAGE_NAME: ${{ github.repository }} # github.repository as <account>/<repo>
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout # Checkout the repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup QEMU # Setup QEMU
+      - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
-      - name: Setup Docker Buildx # Setup Docker Buildx
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
 
-      - name: Login to GitHub Container Registry # Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get & Set Container Metadata # Get & Set Container Metadata
+      - name: Get & Set Container Metadata
         id: meta-packages
         uses: docker/metadata-action@v5
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Clean Build App # Remove unused files & dirs
+      - name: Clean Build App
         run: rm -rf .git .github
-      - name: Build & Push Container # Build & Push Container
+      - name: Build & Push Container
         uses: docker/build-push-action@v5
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
         with:

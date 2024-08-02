@@ -43,7 +43,7 @@ jobs:
       - name: Clean Build App
         run: rm -rf .git .github
       - name: Build & Push Container
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: env.REGISTRY != '' && env.IMAGE_NAME != ''
         with:
           context: .

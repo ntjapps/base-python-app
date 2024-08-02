@@ -3,7 +3,7 @@ import time
 
 from celery import Celery
 
-from scripts.apiAuthInterface import getAccessToken
+from helpers.apiAuthInterface import getAccessToken
 
 celery = Celery(__name__)
 celery.conf.broker_url = os.environ.get("CELERY_BROKER_URL")
@@ -37,4 +37,3 @@ def test_api_task(self):
         "Accept": "application/json"
     }
     req = requests.post(url, json=data, headers=headers)
-

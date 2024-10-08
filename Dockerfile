@@ -1,15 +1,12 @@
-FROM python:slim
+FROM ghcr.io/ntj125app/python-custom:latest
 
 ENV SENTRY_PYTHON_DSN=""
 
-RUN apt-get update && apt-get install -y gcc musl-dev && mkdir /app
-
-WORKDIR /app
-
 COPY requirements.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt && \
-    apt-get autoremove -y gcc musl-dev
+RUN pip install --no-cache-dir -r requirements.txt
+
+WORKDIR /app
 
 COPY . .
 

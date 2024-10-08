@@ -1,11 +1,14 @@
 fastapi
+pydantic_core
 uvicorn
 sentry_sdk
-worker
 celery
 pytest
-redis
+pyamqp
 requests
+SQLAlchemy
+python-dotenv
+uuid-utils
 
 pandas
-psycopg2-binary
+psycopg[binary]

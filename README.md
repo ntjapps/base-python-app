@@ -13,3 +13,7 @@ use ``` pip install -r requirements.txt ```
 ## Install tools
 
 use ``` pip install pipreqs pip_review autopep8 ```
+
+## Updated Libs
+
+13 Dec 2024

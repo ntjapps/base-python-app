@@ -16,4 +16,4 @@ use `pip install pipreqs pip_review autopep8`
 
 ## Updated Libs
 
-05 Maret 2025
+05 Maret 2025 - Updated

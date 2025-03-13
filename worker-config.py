@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 if not os.path.exists(".env"):
     print(".env file is not available")
 
-    # Create symbolic link from /var/www/vhosts/localhost/.env to .env
-    os.symlink("/var/www/vhosts/localhost/.env", ".env")
+    # Create symbolic link from /app/.env to .env
+    os.symlink("/app/.env", ".env")
 
     # Check if .env link is available
     if not os.path.exists(".env"):

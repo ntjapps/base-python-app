@@ -9,6 +9,7 @@ requests
 SQLAlchemy
 python-dotenv
 uuid-utils
+rediscache
 
 pandas
 psycopg[binary]

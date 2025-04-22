@@ -1,4 +1,4 @@
-FROM ghcr.io/ntj125app/python-custom:latest
+FROM ghcr.io/ntjapps/python-custom:latest
 
 ENV SENTRY_PYTHON_DSN=""
 

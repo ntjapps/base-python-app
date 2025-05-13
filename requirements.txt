@@ -12,4 +12,4 @@ uuid-utils==0.10.0
 rediscache==1.0.5
 
 pandas==2.2.3
-psycopg[binary]==3.2.7
+psycopg[binary]==3.2.9

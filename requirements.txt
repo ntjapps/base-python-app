@@ -6,7 +6,7 @@ celery==5.5.2
 pytest==8.3.5
 pyamqp==0.1.0.7
 requests==2.32.3
-SQLAlchemy==2.0.40
+SQLAlchemy==2.0.41
 python-dotenv==1.1.0
 uuid-utils==0.10.0
 rediscache==1.0.5

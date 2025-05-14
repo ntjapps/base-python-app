@@ -1,13 +1,15 @@
 import sys
 
 from celery import Celery
+from helpers.laravelDbLoggerInterface import laravel_log_payload
 
 
 def runScripts():
     print("Running scripts")
-    app = Celery(
-        __name__, broker='pyamqp://queueuser:queuepass@base_python_rabbitmq:5672/queuevhost')
-    app.send_task('test_api_task')
+    # Example of how to use the laravel_log_payload function
+    payload = laravel_log_payload(
+        "This is a test message", level="info", context="Test context")
+    print("Generated payload:", payload)
 
 
 if __name__ == "__main__":

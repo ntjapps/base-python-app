@@ -2,11 +2,13 @@ import subprocess
 import re
 import os
 
+
 def normalize_package_name(name):
     """
     Normalize package name according to PEP 503 (lowercase, replace runs of '-', '_', '.' with '-').
     """
     return re.sub(r"[-_.]+", "-", name).lower()
+
 
 def get_installed_packages():
     """
@@ -15,7 +17,8 @@ def get_installed_packages():
     """
     installed_packages = {}
     try:
-        process = subprocess.run(['pip', 'freeze'], capture_output=True, text=True, check=True)
+        process = subprocess.run(
+            ['pip', 'freeze'], capture_output=True, text=True, check=True)
         for line in process.stdout.strip().split('\n'):
             if '==' in line:
                 name, version = line.split('==', 1)
@@ -25,6 +28,7 @@ def get_installed_packages():
     except FileNotFoundError:
         print("Error: 'pip' command not found. Ensure pip is installed and in your PATH.")
     return installed_packages
+
 
 def update_requirements_file(requirements_path="requirements.txt"):
     """
@@ -57,7 +61,8 @@ def update_requirements_file(requirements_path="requirements.txt"):
                 match = package_name_regex.match(stripped_line)
                 if match:
                     package_name_in_req_file = match.group(1)
-                    normalized_req_name = normalize_package_name(package_name_in_req_file)
+                    normalized_req_name = normalize_package_name(
+                        package_name_in_req_file)
 
                     if normalized_req_name in installed_packages:
                         current_version = installed_packages[normalized_req_name]
@@ -77,6 +82,7 @@ def update_requirements_file(requirements_path="requirements.txt"):
         print(f"Successfully updated '{requirements_path}'.")
     except IOError as e:
         print(f"Error writing to '{requirements_path}': {e}")
+
 
 if __name__ == "__main__":
     update_requirements_file()

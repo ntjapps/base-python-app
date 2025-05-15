@@ -11,17 +11,14 @@ from models.ServerLog import ServerLogModel, ServerLogSession
 
 
 @celery.task(bind=True, name="log_db_task")
-def log_db_task(self, args1: str | None):
-    class LoggerInterfaceModel:
-        message: str
-        channel: str
-        level: str
-        level_name: str
-        datetime: str
-        context: str
-        extra: str
+def log_db_task(self, args1: str | dict | None):
 
-    payload: LoggerInterfaceModel = json.loads(args1) if args1 else None
+    if isinstance(args1, str):
+        payload = json.loads(args1)
+    elif isinstance(args1, dict):
+        payload = args1
+    else:
+        payload = None
 
     if payload is not None:
         with ServerLogSession() as session:

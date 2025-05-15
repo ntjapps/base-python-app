@@ -1,6 +1,5 @@
 from datetime import datetime
 import uuid_utils as uuid
-import json
 from typing import Optional
 
 
@@ -24,7 +23,8 @@ def laravel_log_payload(message: str, level: str = "info", context: Optional[dic
         "emergency": 600
     }.get(level.lower(), 200)
     now = datetime.now()
-    datetime_str = now.strftime("%Y-%m-%d %H:%M:%S") + f".{now.microsecond // 1000:03d}"
+    datetime_str = now.strftime("%Y-%m-%d %H:%M:%S") + \
+        f".{now.microsecond // 1000:03d}"
     return {
         "id": str(uuid.uuid7()),
         "message": message,

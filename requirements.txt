@@ -8,7 +8,7 @@ pyamqp==0.1.0.7
 requests==2.32.3
 SQLAlchemy==2.0.41
 python-dotenv==1.1.0
-uuid-utils==0.10.0
+uuid-utils==0.11.0
 rediscache==1.0.5
 
 pandas==2.2.3

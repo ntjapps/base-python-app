@@ -10,8 +10,20 @@ updates:
     schedule:
       interval: "daily"
       timezone: "Asia/Jakarta"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "python"
+      - "fastapi"
+      - "celery"
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: "weekly"
       timezone: "Asia/Jakarta"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
+      - "github-actions"

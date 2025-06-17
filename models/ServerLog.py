@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 import sqlalchemy as db
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from database.config import openConnection
 
 Base = declarative_base()

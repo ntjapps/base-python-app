@@ -62,12 +62,13 @@ jobs:
             --hidden-import=sqlalchemy \
             --hidden-import=requests \
             --hidden-import=dotenv \
+            --hidden-import=pyarmor_runtime_000000 \
             dist-obf/main.py
 
       - name: Build standalone binary with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
         run: >
-          python -m PyInstaller --onefile --name base-python-app --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv dist-obf/main.py
+          python -m PyInstaller --onefile --name base-python-app --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv --hidden-import=pyarmor_runtime_000000 dist-obf/main.py
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4

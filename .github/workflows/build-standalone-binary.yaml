@@ -42,12 +42,12 @@ jobs:
       - name: Obfuscate all source code with Pyarmor (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pyarmor obfuscate --recursive --output dist-obf .
+          pyarmor gen --recursive --output dist-obf .
 
       - name: Obfuscate all source code with Pyarmor (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          pyarmor obfuscate --recursive --output dist-obf .
+          pyarmor gen --recursive --output dist-obf .
 
       - name: Build standalone binary with PyInstaller (Linux)
         if: matrix.os == 'ubuntu-latest'

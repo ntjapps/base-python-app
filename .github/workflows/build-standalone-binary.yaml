@@ -39,19 +39,6 @@ jobs:
         run: |
           pip install pyarmor
 
-      - name: Get escpos capabilities.json path (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo "ESCPOS_CAPABILITIES=$(python -c 'import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), "capabilities.json"))')" >> $GITHUB_ENV
-          if [ ! -f "$(python -c 'import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), "capabilities.json"))')" ]; then echo 'capabilities.json not found!'; exit 1; fi
-
-      - name: Get escpos capabilities.json path (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          $capfile = python -c "import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), 'capabilities.json'))"
-          if (!(Test-Path $capfile)) { Write-Error 'capabilities.json not found!'; exit 1 }
-          echo "ESCPOS_CAPABILITIES=$capfile" | Out-File -FilePath $env:GITHUB_ENV -Append
-
       - name: Obfuscate all source code with Pyarmor (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |

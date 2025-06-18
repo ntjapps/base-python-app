@@ -1,0 +1,91 @@
+name: Build Standalone Binary
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-binary:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+          pip install libusb-package
+
+      - name: Install Pyarmor
+        run: |
+          pip install pyarmor
+
+      - name: Get escpos capabilities.json path (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo "ESCPOS_CAPABILITIES=$(python -c 'import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), "capabilities.json"))')" >> $GITHUB_ENV
+          if [ ! -f "$(python -c 'import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), "capabilities.json"))')" ]; then echo 'capabilities.json not found!'; exit 1; fi
+
+      - name: Get escpos capabilities.json path (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $capfile = python -c "import escpos,os;print(os.path.join(os.path.dirname(escpos.__file__), 'capabilities.json'))"
+          if (!(Test-Path $capfile)) { Write-Error 'capabilities.json not found!'; exit 1 }
+          echo "ESCPOS_CAPABILITIES=$capfile" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Obfuscate all source code with Pyarmor (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          pyarmor obfuscate --recursive --output dist-obf .
+
+      - name: Obfuscate all source code with Pyarmor (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyarmor obfuscate --recursive --output dist-obf .
+
+      - name: Build standalone binary with PyInstaller (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          python -m PyInstaller --onefile --name kapuc-local-print-svc --add-data "routes:routes" \
+            --hidden-import=fastapi \
+            --hidden-import=fastapi.responses \
+            --hidden-import=pydantic \
+            --hidden-import=uvicorn \
+            --hidden-import=sentry_sdk \
+            --hidden-import=celery \
+            --hidden-import=sqlalchemy \
+            --hidden-import=requests \
+            --hidden-import=dotenv \
+            dist-obf/main.py
+
+      - name: Build standalone binary with PyInstaller (Windows)
+        if: matrix.os == 'windows-latest'
+        run: >
+          python -m PyInstaller --onefile --name kapuc-local-print-svc --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv dist-obf/main.py
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kapuc-local-print-svc-${{ matrix.os }}-binary
+          path: |
+            dist/kapuc-local-print-svc
+            dist/kapuc-local-print-svc.exe

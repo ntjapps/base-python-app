@@ -25,3 +25,8 @@ def read_root():
 
 # Import routes
 app.include_router(api.router)
+
+# Main entry point
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="localhost", port=8000, log_level="info")

@@ -52,7 +52,7 @@ jobs:
       - name: Build standalone binary with PyInstaller (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          python -m PyInstaller --onefile --name kapuc-local-print-svc --add-data "routes:routes" \
+          python -m PyInstaller --onefile --name base-python-app --add-data "routes:routes" \
             --hidden-import=fastapi \
             --hidden-import=fastapi.responses \
             --hidden-import=pydantic \
@@ -67,12 +67,12 @@ jobs:
       - name: Build standalone binary with PyInstaller (Windows)
         if: matrix.os == 'windows-latest'
         run: >
-          python -m PyInstaller --onefile --name kapuc-local-print-svc --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv dist-obf/main.py
+          python -m PyInstaller --onefile --name base-python-app --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv dist-obf/main.py
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kapuc-local-print-svc-${{ matrix.os }}-binary
+          name: base-python-app-${{ matrix.os }}-binary
           path: |
-            dist/kapuc-local-print-svc
-            dist/kapuc-local-print-svc.exe
+            dist/base-python-app
+            dist/base-python-app.exe

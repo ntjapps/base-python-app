@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import jobs.test_job as test_job
 
+
 @patch('helpers.apiAuthInterface.requests.post')
 def test_celery_test_api_task_success(mock_post):
     mock_token_response = MagicMock()
@@ -16,6 +17,7 @@ def test_celery_test_api_task_success(mock_post):
     assert result['return']
     assert result['status_code'] == 200
 
+
 @patch('helpers.apiAuthInterface.requests.post')
 def test_celery_test_api_task_fail(mock_post):
     mock_token_response = MagicMock()
@@ -29,9 +31,11 @@ def test_celery_test_api_task_fail(mock_post):
     with pytest.raises(Exception):
         test_job.celery_test_api_task()
 
+
 def test_celery_test_task():
     result = test_job.celery_test_task()
     assert result['return']
+
 
 def test_celery_test_body_task():
     result = test_job.celery_test_body_task('a', 'b', 'c')

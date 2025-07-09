@@ -8,6 +8,11 @@ def celery_test_task():
     return {"return": True, "message": "test_task done"}
 
 
+@celery.task(name="celery_test_sentry_task")
+def celery_test_task():
+    raise Exception("Raised Exception on purpose to send it to Bugsink")
+
+
 @celery.task(name="celery_test_body_task")
 def celery_test_body_task(args1: str | None = None, args2: str | None = None, args3: str | None = None):
     body = {"args1": args1, "args2": args2, "args3": args3}

@@ -1,7 +1,7 @@
 fastapi==0.115.13
 pydantic_core==2.35.1
 uvicorn==0.34.3
-sentry-sdk==2.30.0
+sentry-sdk==2.35.1
 celery==5.5.3
 pyamqp==0.1.0.7
 requests==2.32.4

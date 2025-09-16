@@ -9,5 +9,5 @@ SQLAlchemy==2.0.41
 python-dotenv==1.1.1
 uuid-utils==0.11.0
 pyinstaller==6.14.1
-psycopg==3.2.9
+psycopg==3.2.10
 Authlib[fastapi]==1.6.3

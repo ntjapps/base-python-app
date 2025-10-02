@@ -10,4 +10,4 @@ python-dotenv==1.1.1
 uuid-utils==0.11.0
 psycopg==3.2.10
 pyinstaller==6.16.0
-Authlib[fastapi]==1.6.3
+Authlib[fastapi]==1.6.5

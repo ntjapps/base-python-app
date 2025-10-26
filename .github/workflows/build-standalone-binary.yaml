@@ -59,7 +59,7 @@ jobs:
           python -m PyInstaller --onefile --name base-python-app --add-data "routes;routes" --hidden-import=fastapi --hidden-import=fastapi.responses --hidden-import=pydantic --hidden-import=uvicorn --hidden-import=sentry_sdk --hidden-import=celery --hidden-import=sqlalchemy --hidden-import=requests --hidden-import=dotenv --collect-submodules celery --collect-submodules kombu --collect-submodules billiard main.py
 
       - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: base-python-app-${{ matrix.os }}-binary
           path: |

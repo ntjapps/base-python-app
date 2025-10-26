@@ -6,7 +6,7 @@ celery==5.5.3
 pyamqp==0.1.0.7
 requests==2.32.5
 SQLAlchemy==2.0.44
-python-dotenv==1.1.1
+python-dotenv==1.2.1
 uuid-utils==0.11.1
 pyinstaller==6.16.0
 psycopg==3.2.11

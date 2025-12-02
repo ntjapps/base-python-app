@@ -1,43 +1,49 @@
-Short, focused guidance for AI coding agents working on this repository.
 
-Repository overview
-- FastAPI web app: `main.py` (includes `routes/api.py`). Healthcheck at `/app/healthcheck`.
-- Background workers: `worker.py` (Celery instance) + `worker-config.py` (Celery config). Tasks live in `jobs/*.py`.
-- Helpers for external integration in `helpers/` (IMAP, OAuth/API client, Laravel-format logger payloads).
-- DB model: `models/ServerLog.py` and DB connection helper in `database/config.py`.
+<!--
+  Model instructions for AI agents in base-python-app.
+  Keep it short and actionable for quick contributions.
+-->
 
-Important constraints
-- Keep web and worker responsibilities separate. Celery jobs must NOT call the main app back (see comment in `jobs/logger_job.py`) — this prevents infinite callback loops.
-- Celery uses JSON serialization and PostgreSQL result backend. Tasks should accept JSON-serializable args.
-- `worker-config.py` expects a `.env` to be present (it will symlink `/app/.env` to `.env` if missing). Do not hardcode secrets in code.
+# AI assistant instructions for base-python-app (FastAPI + Celery)
 
-Patterns to follow (with concrete examples)
-- Declaring tasks: use `from worker import celery` and decorate with:
-  @celery.task(name="my_task_name")
-  (see `jobs/test_job.py`, `jobs/logger_job.py`)
-- Submitting tasks programmatically: `celery.send_task("task_name", args=[...])` (see `run.py`). The API endpoint `/api/v1/task-submit` in `routes/api.py` mirrors this.
-- Writing logs to DB: construct a Laravel-style payload using `helpers/laravelDbLoggerInterface.laravel_log_payload(...)` and submit to `log_db_task` (see `jobs/logger_job.py`).
-- SQLAlchemy usage: `models/ServerLog.py` exposes `ServerLogSession()` to obtain a session; jobs use `insert()` and `session.commit()`.
+Purpose: Help an AI agent be productive and safe in a project with a FastAPI app and Celery workers. Emphasize separation between web and worker responsibilities, data safety, and testing.
 
-Developer workflows
-- Run the FastAPI app locally: python `main.py` (it runs Uvicorn when executed as __main__).
-- Trigger demo tasks: python `run.py` will send example tasks to the Celery worker.
-- Run tests: from project root run `pytest -q` (tests are located under `tests/`).
+Project snapshot
+- FastAPI app: `main.py` (routes in `routes/api.py`) with healthcheck at `/app/healthcheck`.
+- Celery worker: `worker.py` + `worker-config.py`; tasks live in `jobs/*.py`.
+- Helpers: `helpers/` for IMAP, OAuth, and Laravel-format logger payloads.
+- DB model: `models/ServerLog.py`; config in `database/config.py`.
 
-Conventions & gotchas
-- Logging: the worker sets a custom `LaravelFormatter` in `worker.py`. Respect that format if adding handlers or changing log output.
-- Task naming: tasks are explicitly named (`name="..."`) — use those names when calling `send_task` or via the API.
-- Avoid importing or executing heavy startup logic at module import time in workers; prefer lazy imports inside task functions.
+Quick workflows (common commands)
+- Run API locally: `python main.py` (starts Uvicorn)
+- Trigger demo tasks: `python run.py`
+- Run tests: `pytest -q`
 
-Integration points to inspect before edits
-- `worker-config.py` — RabbitMQ (RABBITMQ_* env vars) and Postgres (DB_*) settings.
-- `helpers/apiAuthInterface.py` — OAuth client credentials flow used by tasks that call the main app.
-- `routes/api.py` — task inspection and task-submit endpoints; useful reference for how tasks are expected to be invoked.
+Key patterns & constraints
+- Do not let Celery tasks call the main app (use API calls with OAuth if needed) to avoid infinite loops. See comment in `jobs/logger_job.py`.
+- Celery tasks must accept JSON-serializable arguments; Celery uses JSON serialization and Postgres result backend.
+- `worker-config.py` expects an `.env` (symlinks `/app/.env` if missing). Never hardcode secrets; use env and secure vaults.
+- Avoid heavy module imports at task import-time; use lazy imports within tasks.
 
-When changing public behavior
-- Add or update tests under `tests/` and run `pytest -q`.
-- Update environment variable docs (README.md) if you introduce new env vars.
+Typical idioms & references
+- Declaring a task: import celery via `from worker import celery` and use `@celery.task(name="my_task_name")`.
+- Submitting tasks: `celery.send_task("task_name", args=[...])` or use the `/api/v1/task-submit` endpoint.
+- Logging to DB: construct payload via `helpers/laravelDbLoggerInterface.laravel_log_payload(...)` and use `log_db_task`.
+- DB sessions: use `models/ServerLog.ServerLogSession()` for SQLAlchemy sessions and commit changes.
 
-If anything is unclear, ask the maintainer for the current `.env` conventions, RabbitMQ and Postgres endpoints, and expected production logging sink.
+Tests & CI rules
+- Add/modify tests under `tests/` and run `pytest -q`. Ensure tasks are mockable and non-destructive for CI.
+- If you update environment variables or credentials the app expects (RabbitMQ, Postgres), update README and document how CI/devs get these values.
 
-Files to read first: `main.py`, `routes/api.py`, `worker.py`, `worker-config.py`, `jobs/logger_job.py`, `helpers/laravelDbLoggerInterface.py`, `models/ServerLog.py`, `database/config.py`.
+Security & safety
+- Avoid storing secrets in code. If you need a temporary secret for local runs, note it in README but keep it out of commits.
+- Ensure Celery tasks are idempotent where possible and always validate/normalize incoming payloads.
+
+Files to inspect first
+- `main.py`, `routes/api.py`, `worker.py`, `worker-config.py`, `jobs/`, `helpers/`, `models/ServerLog.py`, `database/config.py`.
+
+If in doubt
+- Ask the repo owner for `.env` conventions, queue and DB endpoints, and production logging sinks.
+
+Feedback
+- If any part of these instructions is unclear, tell me the task you expect the AI to perform and I'll expand or adjust these instructions.

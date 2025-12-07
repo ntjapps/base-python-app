@@ -1,4 +1,4 @@
-fastapi==0.123.5
+fastapi==0.124.0
 pydantic_core==2.41.5
 uvicorn==0.38.0
 sentry-sdk==2.46.0
